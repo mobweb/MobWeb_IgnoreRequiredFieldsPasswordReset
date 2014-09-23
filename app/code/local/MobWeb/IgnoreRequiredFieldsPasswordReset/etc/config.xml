@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <MobWeb_IgnoreRequiredFieldsPasswordReset>
+            <version>0.0.1</version>
+        </MobWeb_IgnoreRequiredFieldsPasswordReset>
+    </modules>
+    <global>
+        <models>
+            <mobweb_ignorerequiredfieldspasswordreset>
+                <class>MobWeb_IgnoreRequiredFieldsPasswordReset_Model</class>
+            </mobweb_ignorerequiredfieldspasswordreset>
+            <customer>
+                <!-- Rewrite the Mage_Customer_Model_Customer model to skip the required fields in its validate function -->
+                <rewrite>
+                    <customer>MobWeb_IgnoreRequiredFieldsPasswordReset_Model_Customer</customer>
+                </rewrite>
+            </customer>
+        </models>
+        <helpers>
+            <mobweb_ignorerequiredfieldspasswordreset>
+                <class>MobWeb_IgnoreRequiredFieldsPasswordReset_Helper</class>
+            </mobweb_ignorerequiredfieldspasswordreset>
+        </helpers>
+        <events>
+            <!-- Debugging observer -->
+            <!--
+            <controller_front_init_before>
+                <observers>
+                    <ignorerequiredfieldspasswordreset>
+                        <class>ignorerequiredfieldspasswordreset/observer</class>
+                        <method>captureOrderSave</method>
+                        <type>singleton</type>
+                    </ignorerequiredfieldspasswordreset >
+                </observers>
+            </controller_front_init_before>
+            -->
+            <!-- Observer the post event of the password reset, where we can register some variables to be ignored during the customer account update -->
+            <controller_action_predispatch_customer_account_resetpasswordpost>
+                <observers>
+                    <mobweb_ignorerequiredfieldspasswordreset>
+                        <class>mobweb_ignorerequiredfieldspasswordreset/observer</class>
+                        <method>registerIgnoredFields</method>
+                    </mobweb_ignorerequiredfieldspasswordreset>
+                </observers>
+            </controller_action_predispatch_customer_account_resetpasswordpost>
+        </events>
+    </global>
+</config>
